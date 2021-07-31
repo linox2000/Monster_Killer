@@ -3,15 +3,36 @@ const ATTACK_MONSTER_VALUE = 14;
 const STRONG_ATTACK_VALUE = 17;
 const HEAL_VALUE = 20;
 
-const enteredValue = prompt("Maximum life for you and monster", "100");
+const MODE_ATTACK = 'ATTACK'
+const MODE_STRONG_ATTACK = 'STRONG_ATTACK'
 
-let chosenMaxLife = parseInt(enteredValue);
+function getMaxLifeValues(){
+    const enteredValue = prompt("Maximum life for you and monster", "100");
+    
+    const parsedValue = parseInt(enteredValue);
+
+    if (isNaN(parsedValue) || parsedValue <= 0)
+        throw {message:'Invalid user input, not a number!'};
+
+        return parsedValue;
+}
+    
+
+let chosenMaxLife;
+    try{
+        chosenMaxLife = getMaxLifeValues()
+
+    }catch(err){
+        console.log(err);
+        chosenMaxLife = 100;
+        alert('You entered something wrong,default values of 100')
+    }
+
 let currentMonsterHelth = chosenMaxLife;
 let currentPlayerHelth = chosenMaxLife;
 let hasBonusLife = true;
 adjustHealthBars(chosenMaxLife);
 
-if (isNaN(chosenMaxLife) || chosenMaxLife <= 0) chosenMaxLife = 100;
 
 function reset() {
   currentMonsterHelth = chosenMaxLife;
@@ -37,9 +58,9 @@ function endRound() {
   if (currentPlayerHelth <= 0 || currentMonsterHelth <= 0) reset();
 }
 function attack(mode) {
-  let maxDamage;
-  if (mode === "ATTACK_VALUE") maxDamage = ATTACK_VALUE;
-  else if (mode === "STRONG_ATTACK") maxDamage = STRONG_ATTACK_VALUE;
+  const maxDamage = mode === MODE_ATTACK ? ATTACK_VALUE:STRONG_ATTACK_VALUE;
+//   if (mode === MODE_ATTACK) maxDamage = ATTACK_VALUE;
+//   else if (mode === MODE_STRONG_ATTACK) maxDamage = STRONG_ATTACK_VALUE;
 
   const damage = dealMonsterDamage(maxDamage);
   currentMonsterHelth -= damage;
@@ -47,11 +68,11 @@ function attack(mode) {
 }
 
 function attackHandler() {
-  attack("ATTACK_VALUE");
+  attack(MODE_ATTACK);
 }
 
 function strongAttackHandler() {
-  attack("STRONG_ATTACK");
+  attack(MODE_STRONG_ATTACK);
 }
 
 function healPlayerHendler() {
